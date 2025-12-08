@@ -24,7 +24,7 @@ exports.getStreams = async (req, res, next) => {
             query.category = category;
         }
 
-        if (isLive !== undefined) {
+        if (isLive !== undefined && isLive !== '') {
             query.isLive = isLive === 'true';
         }
 
