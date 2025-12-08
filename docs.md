@@ -3,7 +3,7 @@
 ## Overview
 This is a RESTful API for managing a sports streaming platform with admin dashboard functionality. The API provides endpoints for authentication, content management, and configuration.
 
-**Base URL:** `http://localhost:5000/api`
+**Base URL:** `https://cricstream-admin.onrender.com/api`
 
 ## Authentication
 All protected endpoints require a Bearer token in the Authorization header:
@@ -808,7 +808,7 @@ API requests are limited to 100 requests per 15 minutes per IP address.
 1. Install dependencies: `npm install`
 2. Set environment variables in `.env`
 3. Start server: `npm run dev`
-4. API will be available at `http://localhost:5000/api`
+4. API will be available at `https://cricstream-admin.onrender.com/api`
 
 ## Environment Variables
 
