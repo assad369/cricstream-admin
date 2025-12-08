@@ -43,7 +43,13 @@ const LiveTvForm = ({ channel, onSubmit, onCancel }) => {
     }, []);
 
     const onFormSubmit = (data) => {
-        onSubmit(data);
+        // Transform null values to empty strings for backend compatibility
+        const formData = {
+            ...data,
+            logo: data.logo || '',
+            description: data.description || ''
+        };
+        onSubmit(formData);
     };
 
     return (

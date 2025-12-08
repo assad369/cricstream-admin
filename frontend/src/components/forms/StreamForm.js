@@ -52,8 +52,17 @@ const StreamForm = ({ stream, onSubmit, onCancel }) => {
     }, []);
 
     const onFormSubmit = (data) => {
+        // Transform null values to empty strings for backend compatibility
         onSubmit({
             ...data,
+            team1: {
+                ...data.team1,
+                logo: data.team1.logo || ''
+            },
+            team2: {
+                ...data.team2,
+                logo: data.team2.logo || ''
+            },
             date: new Date(data.date),
             expiryTime: new Date(data.expiryTime)
         });

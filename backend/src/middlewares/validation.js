@@ -16,19 +16,19 @@ const schemas = {
     categorySchema: Joi.object({
         name: Joi.string().required(),
         slug: Joi.string().required(),
-        description: Joi.string().allow(''),
-        icon: Joi.string().allow('')
+        description: Joi.string().allow('', null),
+        icon: Joi.string().allow('', null)
     }),
 
     streamSchema: Joi.object({
         title: Joi.string().required(),
         team1: Joi.object({
             name: Joi.string().required(),
-            logo: Joi.string().allow('')
+            logo: Joi.string().allow('', null)
         }).required(),
         team2: Joi.object({
             name: Joi.string().required(),
-            logo: Joi.string().allow('')
+            logo: Joi.string().allow('', null)
         }).required(),
         date: Joi.date().required(),
         streamURL: Joi.string().uri().required(),
@@ -39,33 +39,33 @@ const schemas = {
 
     liveTvSchema: Joi.object({
         channelName: Joi.string().required(),
-        logo: Joi.string().allow(''),
+        logo: Joi.string().allow('', null),
         url: Joi.string().uri().required(),
         category: Joi.string().required(),
         isLive: Joi.boolean().default(true),
-        description: Joi.string().allow('')
+        description: Joi.string().allow('', null)
     }),
 
     highlightSchema: Joi.object({
         title: Joi.string().required(),
         url: Joi.string().uri().required(),
-        thumbnail: Joi.string().allow(''),
+        thumbnail: Joi.string().allow('', null),
         category: Joi.string().required(),
-        duration: Joi.string().allow(''),
+        duration: Joi.string().allow('', null),
         tags: Joi.array().items(Joi.string())
     }),
 
     socialLinkSchema: Joi.object({
         platform: Joi.string().required(),
         url: Joi.string().uri().required(),
-        icon: Joi.string().allow(''),
+        icon: Joi.string().allow('', null),
         isActive: Joi.boolean().default(true),
         order: Joi.number().default(0)
     }),
 
     baseUrlSchema: Joi.object({
         url: Joi.string().uri().required(),
-        description: Joi.string().allow(''),
+        description: Joi.string().allow('', null),
         isActive: Joi.boolean().default(true)
     }),
 

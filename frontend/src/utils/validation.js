@@ -17,7 +17,7 @@ export const categorySchema = yup.object().shape({
         .required('Slug is required')
         .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens'),
     description: yup.string(),
-    icon: yup.string().url('Invalid URL')
+    icon: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL')
 });
 
 export const streamSchema = yup.object().shape({
@@ -26,12 +26,12 @@ export const streamSchema = yup.object().shape({
     team1: yup.object().shape({
         name: yup.string()
             .required('Team 1 name is required'),
-        logo: yup.string().url('Invalid URL')
+        logo: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL')
     }),
     team2: yup.object().shape({
         name: yup.string()
             .required('Team 2 name is required'),
-        logo: yup.string().url('Invalid URL')
+        logo: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL')
     }),
     date: yup.date()
         .required('Date is required'),
@@ -49,7 +49,7 @@ export const streamSchema = yup.object().shape({
 export const liveTvSchema = yup.object().shape({
     channelName: yup.string()
         .required('Channel name is required'),
-    logo: yup.string().url('Invalid URL'),
+    logo: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL'),
     url: yup.string()
         .url('Invalid URL')
         .required('URL is required'),
@@ -65,7 +65,7 @@ export const highlightSchema = yup.object().shape({
     url: yup.string()
         .url('Invalid URL')
         .required('URL is required'),
-    thumbnail: yup.string().url('Invalid URL'),
+    thumbnail: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL'),
     category: yup.string()
         .required('Category is required'),
     duration: yup.string(),
@@ -78,7 +78,7 @@ export const socialLinkSchema = yup.object().shape({
     url: yup.string()
         .url('Invalid URL')
         .required('URL is required'),
-    icon: yup.string().url('Invalid URL'),
+    icon: yup.string().nullable().transform((value) => value === '' ? null : value).url('Invalid URL'),
     isActive: yup.boolean(),
     order: yup.number()
 });
