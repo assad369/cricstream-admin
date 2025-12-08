@@ -80,44 +80,54 @@ const StreamForm = ({ stream, onSubmit, onCancel }) => {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Team 1</h3>
-                    <FormInput
-                        name="team1.name"
-                        label="Team Name"
-                        placeholder="Enter team name"
-                        required
-                        register={register}
-                        errors={errors}
-                    />
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/30 border border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs flex items-center justify-center mr-2">1</span>
+                        Team 1
+                    </h3>
+                    <div className="space-y-4">
+                        <FormInput
+                            name="team1.name"
+                            label="Team Name"
+                            placeholder="Enter team name"
+                            required
+                            register={register}
+                            errors={errors}
+                        />
 
-                    <FormInput
-                        name="team1.logo"
-                        label="Team Logo URL"
-                        placeholder="https://example.com/logo.png"
-                        register={register}
-                        errors={errors}
-                    />
+                        <FormInput
+                            name="team1.logo"
+                            label="Team Logo URL"
+                            placeholder="https://example.com/logo.png"
+                            register={register}
+                            errors={errors}
+                        />
+                    </div>
                 </div>
 
-                <div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Team 2</h3>
-                    <FormInput
-                        name="team2.name"
-                        label="Team Name"
-                        placeholder="Enter team name"
-                        required
-                        register={register}
-                        errors={errors}
-                    />
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/30 border border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs flex items-center justify-center mr-2">2</span>
+                        Team 2
+                    </h3>
+                    <div className="space-y-4">
+                        <FormInput
+                            name="team2.name"
+                            label="Team Name"
+                            placeholder="Enter team name"
+                            required
+                            register={register}
+                            errors={errors}
+                        />
 
-                    <FormInput
-                        name="team2.logo"
-                        label="Team Logo URL"
-                        placeholder="https://example.com/logo.png"
-                        register={register}
-                        errors={errors}
-                    />
+                        <FormInput
+                            name="team2.logo"
+                            label="Team Logo URL"
+                            placeholder="https://example.com/logo.png"
+                            register={register}
+                            errors={errors}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -174,19 +184,22 @@ const StreamForm = ({ stream, onSubmit, onCancel }) => {
                 )}
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center p-4 rounded-xl bg-gray-50 dark:bg-gray-700/30 border border-gray-200 dark:border-gray-700">
                 <input
                     type="checkbox"
                     id="isLive"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    className="h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700"
                     {...register('isLive')}
                 />
-                <label htmlFor="isLive" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                    Is Live Now
-                </label>
+                <div className="ml-3">
+                    <label htmlFor="isLive" className="text-sm font-medium text-gray-900 dark:text-white">
+                        Live Now
+                    </label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Mark this stream as currently live</p>
+                </div>
             </div>
 
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Button
                     type="button"
                     variant="secondary"
@@ -197,9 +210,9 @@ const StreamForm = ({ stream, onSubmit, onCancel }) => {
                 </Button>
                 <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    loading={isSubmitting}
                 >
-                    {isSubmitting ? 'Saving...' : stream ? 'Update Stream' : 'Create Stream'}
+                    {stream ? 'Update Stream' : 'Create Stream'}
                 </Button>
             </div>
         </form>

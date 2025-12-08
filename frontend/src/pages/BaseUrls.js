@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { 
+    PlusIcon, 
+    MagnifyingGlassIcon, 
+    XMarkIcon,
+    LinkIcon,
+    FunnelIcon,
+    CheckCircleIcon,
+    XCircleIcon
+} from '@heroicons/react/24/outline';
 import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import BaseUrlForm from '../components/forms/BaseUrlForm';
@@ -21,23 +29,48 @@ const BaseUrls = () => {
     const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
-        { key: 'url', label: 'URL' },
-        { key: 'description', label: 'Description' },
-        {
-            key: 'isActive',
-            label: 'Active',
-            type: 'boolean',
+        { 
+            key: 'url', 
+            label: 'URL',
             render: (row) => (
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    row.isActive
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-                }`}>
-          {row.isActive ? 'Active' : 'Inactive'}
-        </span>
+                <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                            <LinkIcon className="w-5 h-5 text-white" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="font-mono text-sm text-gray-900 dark:text-white truncate max-w-[300px]">{row.url}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{row.description || 'No description'}</div>
+                    </div>
+                </div>
             )
         },
-        { key: 'createdAt', label: 'Created At', type: 'date' }
+        {
+            key: 'isActive',
+            label: 'Status',
+            type: 'boolean',
+            render: (row) => (
+                <span className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+                    row.isActive
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-400'
+                }`}>
+                    {row.isActive ? (
+                        <>
+                            <CheckCircleIcon className="w-3.5 h-3.5" />
+                            <span>Active</span>
+                        </>
+                    ) : (
+                        <>
+                            <XCircleIcon className="w-3.5 h-3.5" />
+                            <span>Inactive</span>
+                        </>
+                    )}
+                </span>
+            )
+        },
+        { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
     useEffect(() => {
@@ -136,86 +169,111 @@ const BaseUrls = () => {
     };
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="space-y-6 animate-fade-in">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Base URLs</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                        Base URLs
+                    </h1>
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                         Manage base URLs for your streaming platform
                     </p>
                 </div>
-                <Button onClick={handleAddBaseUrl}>
-                    <PlusIcon className="h-5 w-5 mr-2" />
+                <Button onClick={handleAddBaseUrl} icon={PlusIcon}>
                     Add Base URL
                 </Button>
             </div>
 
+            {/* Error Alert */}
             {error && (
-                <div className="mb-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
-                    <div className="flex">
-                        <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <div className="alert alert-error animate-slide-down">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <svg className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
+                            <span className="text-sm">{error}</span>
                         </div>
-                        <div className="ml-3">
-                            <p className="text-sm text-red-700 dark:text-red-300">
-                                {error}
-                            </p>
-                        </div>
+                        <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
+                            <XMarkIcon className="h-5 w-5" />
+                        </button>
                     </div>
                 </div>
             )}
 
-            <div className="mb-4 flex flex-col md:flex-row gap-4">
-                <div className="relative flex-1">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            {/* Filters Card */}
+            <div className="card">
+                <div className="flex flex-col lg:flex-row gap-4">
+                    {/* Search */}
+                    <div className="relative flex-1">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                        <input
+                            type="text"
+                            className="input pl-10"
+                            placeholder="Search base URLs..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                        />
                     </div>
-                    <input
-                        type="text"
-                        className="input pl-10"
-                        placeholder="Search base URLs..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                    />
-                </div>
 
-                <div className="flex gap-4">
-                    <select
-                        className="input"
-                        value={isActiveFilter}
-                        onChange={handleActiveFilterChange}
-                    >
-                        <option value="">All Status</option>
-                        <option value="true">Active Only</option>
-                        <option value="false">Inactive Only</option>
-                    </select>
+                    {/* Filter Controls */}
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                            <FunnelIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline">Filters:</span>
+                        </div>
+                        
+                        <select
+                            className="input !py-2 !w-auto min-w-[140px]"
+                            value={isActiveFilter}
+                            onChange={handleActiveFilterChange}
+                        >
+                            <option value="">All Status</option>
+                            <option value="true">✅ Active Only</option>
+                            <option value="false">⭕ Inactive</option>
+                        </select>
 
-                    {(searchTerm || isActiveFilter) && (
-                        <Button variant="secondary" onClick={clearFilters}>
-                            Clear Filters
-                        </Button>
-                    )}
+                        {(searchTerm || isActiveFilter) && (
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={clearFilters}
+                                className="text-gray-500"
+                            >
+                                <XMarkIcon className="h-4 w-4 mr-1" />
+                                Clear
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <DataTable
-                columns={columns}
-                data={baseUrls}
-                loading={loading}
-                onEdit={handleEditBaseUrl}
-                onDelete={handleDeleteBaseUrl}
-                onToggle={handleToggleActiveStatus}
-                toggleLabel="Toggle Active"
-                pagination={pagination}
-                onPageChange={handlePageChange}
-            />
+            {/* Data Table */}
+            <div className="card !p-0 overflow-hidden">
+                <DataTable
+                    columns={columns}
+                    data={baseUrls}
+                    loading={loading}
+                    onEdit={handleEditBaseUrl}
+                    onDelete={handleDeleteBaseUrl}
+                    onToggle={handleToggleActiveStatus}
+                    toggleLabel="Toggle Active"
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                    emptyMessage="No base URLs found"
+                    emptyDescription="Get started by adding a new base URL"
+                />
+            </div>
 
+            {/* Modal */}
             <Modal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 title={editingBaseUrl ? 'Edit Base URL' : 'Add New Base URL'}
+                description={editingBaseUrl ? 'Update the base URL details below' : 'Fill in the details to add a new base URL'}
                 size="medium"
             >
                 <BaseUrlForm

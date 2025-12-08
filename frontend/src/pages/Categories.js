@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, MagnifyingGlassIcon, XMarkIcon, TagIcon } from '@heroicons/react/24/outline';
 import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import CategoryForm from '../components/forms/CategoryForm';
@@ -20,10 +20,33 @@ const Categories = () => {
     const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
-        { key: 'name', label: 'Name' },
-        { key: 'slug', label: 'Slug' },
-        { key: 'description', label: 'Description' },
-        { key: 'createdAt', label: 'Created At', type: 'date' }
+        { 
+            key: 'name', 
+            label: 'Category',
+            render: (row) => (
+                <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                            <TagIcon className="w-5 h-5 text-white" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="font-medium text-gray-900 dark:text-white">{row.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">/{row.slug}</div>
+                    </div>
+                </div>
+            )
+        },
+        { 
+            key: 'description', 
+            label: 'Description',
+            render: (row) => (
+                <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
+                    {row.description || 'No description'}
+                </p>
+            )
+        },
+        { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
     useEffect(() => {
@@ -100,39 +123,42 @@ const Categories = () => {
     };
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="space-y-6 animate-fade-in">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Categories</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                        Categories
+                    </h1>
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                         Manage sports categories for your streaming platform
                     </p>
                 </div>
-                <Button onClick={handleAddCategory}>
-                    <PlusIcon className="h-5 w-5 mr-2" />
+                <Button onClick={handleAddCategory} icon={PlusIcon}>
                     Add Category
                 </Button>
             </div>
 
+            {/* Error Alert */}
             {error && (
-                <div className="mb-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
-                    <div className="flex">
-                        <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <div className="alert alert-error animate-slide-down">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <svg className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
+                            <span className="text-sm">{error}</span>
                         </div>
-                        <div className="ml-3">
-                            <p className="text-sm text-red-700 dark:text-red-300">
-                                {error}
-                            </p>
-                        </div>
+                        <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
+                            <XMarkIcon className="h-5 w-5" />
+                        </button>
                     </div>
                 </div>
             )}
 
-            <div className="mb-4">
-                <div className="relative rounded-md shadow-sm">
+            {/* Search Card */}
+            <div className="card">
+                <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
@@ -146,20 +172,27 @@ const Categories = () => {
                 </div>
             </div>
 
-            <DataTable
-                columns={columns}
-                data={categories}
-                loading={loading}
-                onEdit={handleEditCategory}
-                onDelete={handleDeleteCategory}
-                pagination={pagination}
-                onPageChange={handlePageChange}
-            />
+            {/* Data Table */}
+            <div className="card !p-0 overflow-hidden">
+                <DataTable
+                    columns={columns}
+                    data={categories}
+                    loading={loading}
+                    onEdit={handleEditCategory}
+                    onDelete={handleDeleteCategory}
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                    emptyMessage="No categories found"
+                    emptyDescription="Get started by creating a new category"
+                />
+            </div>
 
+            {/* Modal */}
             <Modal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 title={editingCategory ? 'Edit Category' : 'Add New Category'}
+                description={editingCategory ? 'Update the category details below' : 'Fill in the details to create a new category'}
                 size="medium"
             >
                 <CategoryForm

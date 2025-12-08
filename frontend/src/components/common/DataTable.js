@@ -1,150 +1,246 @@
 import React from 'react';
 import Button from './Button';
 import { formatNumber, formatDate } from '../../utils/helpers';
+import { 
+    PencilSquareIcon, 
+    TrashIcon, 
+    ChevronLeftIcon, 
+    ChevronRightIcon,
+    EllipsisHorizontalIcon
+} from '@heroicons/react/24/outline';
+import { TableSkeleton } from './Loading';
 
 const DataTable = ({
-                       columns,
-                       data,
-                       loading = false,
-                       onEdit,
-                       onDelete,
-                       onToggle,
-                       toggleLabel = 'Toggle',
-                       pagination,
-                       onPageChange
-                   }) => {
+    columns,
+    data,
+    loading = false,
+    onEdit,
+    onDelete,
+    onToggle,
+    toggleLabel = 'Toggle',
+    pagination,
+    onPageChange,
+    emptyMessage = 'No data available',
+    emptyIcon: EmptyIcon
+}) => {
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+                <TableSkeleton rows={5} columns={columns.length} />
             </div>
         );
     }
 
     if (!data || data.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400">No data available</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 p-12">
+                <div className="text-center">
+                    {EmptyIcon && (
+                        <EmptyIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                    )}
+                    <h3 className="mt-4 text-sm font-medium text-gray-900 dark:text-white">
+                        {emptyMessage}
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Get started by creating a new item.
+                    </p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="overflow-x-auto">
-            <table className="table">
-                <thead>
-                <tr>
-                    {columns.map((column) => (
-                        <th key={column.key}>{column.label}</th>
-                    ))}
-                    <th className="text-right">Actions</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {data.map((row) => (
-                    <tr key={row._id}>
-                        {columns.map((column) => {
-                            let value = row[column.key];
-
-                            // Format the value based on column type
-                            if (column.type === 'date') {
-                                value = formatDate(value);
-                            } else if (column.type === 'number') {
-                                value = formatNumber(value);
-                            } else if (column.type === 'boolean') {
-                                value = value ? 'Yes' : 'No';
-                            } else if (column.type === 'image' && value) {
-                                value = (
-                                    <img
-                                        src={value}
-                                        alt={column.key}
-                                        className="h-10 w-10 rounded-full object-cover"
-                                    />
-                                );
-                            }
-
-                            return (
-                                <td key={`${row._id}-${column.key}`}>
-                                    {column.render ? column.render(row) : value}
-                                </td>
-                            );
-                        })}
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            {onToggle && (
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    onClick={() => onToggle(row._id)}
-                                    className="mr-2"
-                                >
-                                    {toggleLabel}
-                                </Button>
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-sm">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            {columns.map((column) => (
+                                <th key={column.key}>{column.label}</th>
+                            ))}
+                            {(onEdit || onDelete || onToggle) && (
+                                <th className="text-right">Actions</th>
                             )}
-                            {onEdit && (
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    onClick={() => onEdit(row)}
-                                    className="mr-2"
-                                >
-                                    Edit
-                                </Button>
-                            )}
-                            {onDelete && (
-                                <Button
-                                    variant="danger"
-                                    size="sm"
-                                    onClick={() => onDelete(row._id)}
-                                >
-                                    Delete
-                                </Button>
-                            )}
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row, idx) => (
+                            <tr key={row._id} className="animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
+                                {columns.map((column) => {
+                                    let value = row[column.key];
 
-            {pagination && (
-                <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
-                    <div className="flex-1 flex justify-between sm:hidden">
-                        <Button
-                            variant="secondary"
-                            onClick={() => onPageChange(pagination.page - 1)}
-                            disabled={!pagination.hasPrev}
-                        >
-                            Previous
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            onClick={() => onPageChange(pagination.page + 1)}
-                            disabled={!pagination.hasNext}
-                        >
-                            Next
-                        </Button>
+                                    if (column.type === 'date') {
+                                        value = formatDate(value);
+                                    } else if (column.type === 'number') {
+                                        value = formatNumber(value);
+                                    } else if (column.type === 'boolean') {
+                                        value = value ? 'Yes' : 'No';
+                                    } else if (column.type === 'image' && value) {
+                                        value = (
+                                            <img
+                                                src={value}
+                                                alt={column.key}
+                                                className="h-10 w-10 rounded-lg object-cover ring-2 ring-gray-100 dark:ring-gray-700"
+                                                onError={(e) => {
+                                                    e.target.src = 'https://via.placeholder.com/40?text=No+Image';
+                                                }}
+                                            />
+                                        );
+                                    }
+
+                                    return (
+                                        <td key={`${row._id}-${column.key}`}>
+                                            {column.render ? column.render(row) : value}
+                                        </td>
+                                    );
+                                })}
+                                {(onEdit || onDelete || onToggle) && (
+                                    <td className="text-right">
+                                        <div className="flex items-center justify-end gap-2">
+                                            {onToggle && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="xs"
+                                                    onClick={() => onToggle(row._id)}
+                                                >
+                                                    {toggleLabel}
+                                                </Button>
+                                            )}
+                                            {onEdit && (
+                                                <button
+                                                    onClick={() => onEdit(row)}
+                                                    className="p-2 text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <PencilSquareIcon className="h-4 w-4" />
+                                                </button>
+                                            )}
+                                            {onDelete && (
+                                                <button
+                                                    onClick={() => onDelete(row._id)}
+                                                    className="p-2 text-gray-500 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <TrashIcon className="h-4 w-4" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+                {data.map((row, idx) => (
+                    <div 
+                        key={row._id} 
+                        className="p-4 animate-fade-in"
+                        style={{ animationDelay: `${idx * 50}ms` }}
+                    >
+                        <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0 space-y-2">
+                                {columns.slice(0, 3).map((column) => {
+                                    let value = row[column.key];
+
+                                    if (column.type === 'date') {
+                                        value = formatDate(value);
+                                    } else if (column.type === 'number') {
+                                        value = formatNumber(value);
+                                    } else if (column.type === 'boolean') {
+                                        value = value ? 'Yes' : 'No';
+                                    } else if (column.type === 'image' && value) {
+                                        value = (
+                                            <img
+                                                src={value}
+                                                alt={column.key}
+                                                className="h-10 w-10 rounded-lg object-cover"
+                                                onError={(e) => {
+                                                    e.target.src = 'https://via.placeholder.com/40?text=No+Image';
+                                                }}
+                                            />
+                                        );
+                                    }
+
+                                    return (
+                                        <div key={`${row._id}-${column.key}`} className="flex items-center gap-2">
+                                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0">
+                                                {column.label}:
+                                            </span>
+                                            <span className="text-sm text-gray-900 dark:text-white truncate">
+                                                {column.render ? column.render(row) : value}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            {(onEdit || onDelete || onToggle) && (
+                                <div className="flex items-center gap-1 ml-4">
+                                    {onToggle && (
+                                        <Button
+                                            variant="ghost"
+                                            size="xs"
+                                            onClick={() => onToggle(row._id)}
+                                        >
+                                            {toggleLabel}
+                                        </Button>
+                                    )}
+                                    {onEdit && (
+                                        <button
+                                            onClick={() => onEdit(row)}
+                                            className="p-2 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                            <PencilSquareIcon className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                    {onDelete && (
+                                        <button
+                                            onClick={() => onDelete(row._id)}
+                                            className="p-2 text-gray-500 hover:text-red-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                            <TrashIcon className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                ))}
+            </div>
+
+            {/* Pagination */}
+            {pagination && pagination.pages > 0 && (
+                <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 px-4 py-3 sm:px-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                                Showing <span className="font-medium">{(pagination.page - 1) * pagination.limit + 1}</span> to{' '}
+                                Showing{' '}
                                 <span className="font-medium">
-                  {Math.min(pagination.page * pagination.limit, pagination.total)}
-                </span>{' '}
+                                    {(pagination.page - 1) * pagination.limit + 1}
+                                </span>{' '}
+                                to{' '}
+                                <span className="font-medium">
+                                    {Math.min(pagination.page * pagination.limit, pagination.total)}
+                                </span>{' '}
                                 of <span className="font-medium">{formatNumber(pagination.total)}</span> results
                             </p>
                         </div>
-                        <div>
-                            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <Button
-                                    variant="secondary"
-                                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                    onClick={() => onPageChange(pagination.page - 1)}
-                                    disabled={!pagination.hasPrev}
-                                >
-                                    <span className="sr-only">Previous</span>
-                                    &larr;
-                                </Button>
-
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => onPageChange(pagination.page - 1)}
+                                disabled={!pagination.hasPrev}
+                                icon={ChevronLeftIcon}
+                            >
+                                <span className="hidden sm:inline">Previous</span>
+                            </Button>
+                            
+                            <div className="hidden sm:flex items-center gap-1">
                                 {Array.from({ length: pagination.pages }, (_, i) => i + 1)
                                     .filter(page =>
                                         page === 1 ||
@@ -152,53 +248,43 @@ const DataTable = ({
                                         (page >= pagination.page - 1 && page <= pagination.page + 1)
                                     )
                                     .map((page, index, array) => {
-                                        if (index > 0 && page - array[index - 1] > 1) {
-                                            return (
-                                                <React.Fragment key={`ellipsis-${page}`}>
-                          <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            ...
-                          </span>
-                                                    <Button
-                                                        variant={page === pagination.page ? "primary" : "secondary"}
-                                                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                                                            page === pagination.page
-                                                                ? 'z-10 bg-primary-50 dark:bg-primary-900 border-primary-500 text-primary-600 dark:text-primary-300'
-                                                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                                        }`}
-                                                        onClick={() => onPageChange(page)}
-                                                    >
-                                                        {page}
-                                                    </Button>
-                                                </React.Fragment>
-                                            );
-                                        }
-
+                                        const showEllipsis = index > 0 && page - array[index - 1] > 1;
                                         return (
-                                            <Button
-                                                key={page}
-                                                variant={page === pagination.page ? "primary" : "secondary"}
-                                                className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                                                    page === pagination.page
-                                                        ? 'z-10 bg-primary-50 dark:bg-primary-900 border-primary-500 text-primary-600 dark:text-primary-300'
-                                                        : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                                }`}
-                                                onClick={() => onPageChange(page)}
-                                            >
-                                                {page}
-                                            </Button>
+                                            <React.Fragment key={page}>
+                                                {showEllipsis && (
+                                                    <span className="px-2 text-gray-400">
+                                                        <EllipsisHorizontalIcon className="h-4 w-4" />
+                                                    </span>
+                                                )}
+                                                <button
+                                                    onClick={() => onPageChange(page)}
+                                                    className={`min-w-[2.25rem] h-9 px-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                                                        page === pagination.page
+                                                            ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/25'
+                                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                    }`}
+                                                >
+                                                    {page}
+                                                </button>
+                                            </React.Fragment>
                                         );
                                     })}
+                            </div>
 
-                                <Button
-                                    variant="secondary"
-                                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                    onClick={() => onPageChange(pagination.page + 1)}
-                                    disabled={!pagination.hasNext}
-                                >
-                                    <span className="sr-only">Next</span>
-                                    &rarr;
-                                </Button>
-                            </nav>
+                            <span className="sm:hidden text-sm text-gray-700 dark:text-gray-300">
+                                Page {pagination.page} of {pagination.pages}
+                            </span>
+
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => onPageChange(pagination.page + 1)}
+                                disabled={!pagination.hasNext}
+                                icon={ChevronRightIcon}
+                                iconPosition="right"
+                            >
+                                <span className="hidden sm:inline">Next</span>
+                            </Button>
                         </div>
                     </div>
                 </div>

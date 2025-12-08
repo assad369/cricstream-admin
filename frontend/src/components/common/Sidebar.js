@@ -10,77 +10,99 @@ import {
     LinkIcon,
     GlobeAltIcon,
     MegaphoneIcon,
-    AdvertisementsIcon,
-    Cog6ToothIcon
+    RectangleGroupIcon,
+    TvIcon
 } from '@heroicons/react/24/outline';
+import { PlayCircleIcon } from '@heroicons/react/24/solid';
 
 const navigation = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
     { name: 'Categories', href: '/categories', icon: RectangleStackIcon },
     { name: 'Streams', href: '/streams', icon: VideoCameraIcon },
-    { name: 'Live TV', href: '/live-tv', icon: FilmIcon },
+    { name: 'Live TV', href: '/live-tv', icon: TvIcon },
     { name: 'Highlights', href: '/highlights', icon: FilmIcon },
     { name: 'Social Links', href: '/social-links', icon: LinkIcon },
     { name: 'Base URLs', href: '/base-urls', icon: GlobeAltIcon },
     { name: 'Announcements', href: '/announcements', icon: MegaphoneIcon },
-    { name: 'Ads', href: '/ads', icon: AdvertisementsIcon },
+    { name: 'Ads', href: '/ads', icon: RectangleGroupIcon },
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const location = useLocation();
 
     const SidebarContent = () => (
-        <>
-            <div className="flex items-center flex-shrink-0 px-4 py-4">
-                <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                    Sports Streaming Admin
-                </h1>
+        <div className="flex flex-col h-full">
+            {/* Logo */}
+            <div className="flex items-center flex-shrink-0 px-4 py-5 border-b border-gray-200 dark:border-gray-700/50">
+                <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
+                        <PlayCircleIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                        <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                            CricStream
+                        </h1>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
+                    </div>
+                </div>
             </div>
 
-            <nav className="mt-5 flex-1 px-2 space-y-1">
+            {/* Navigation */}
+            <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+                <p className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                    Menu
+                </p>
                 {navigation.map((item) => {
                     const isActive = location.pathname === item.href;
                     return (
                         <Link
                             key={item.name}
                             to={item.href}
-                            className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                            className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
                                 isActive
-                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
-                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                                    ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                             }`}
                             onClick={() => setSidebarOpen(false)}
                         >
-                            <item.icon
-                                className={`mr-3 flex-shrink-0 h-6 w-6 ${
-                                    isActive
-                                        ? 'text-primary-500 dark:text-primary-400'
-                                        : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-300'
-                                }`}
-                                aria-hidden="true"
-                            />
+                            <div className={`flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-colors ${
+                                isActive
+                                    ? 'bg-primary-100 dark:bg-primary-800/50'
+                                    : 'bg-gray-100 dark:bg-gray-700/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-600/50'
+                            }`}>
+                                <item.icon
+                                    className={`h-5 w-5 ${
+                                        isActive
+                                            ? 'text-primary-600 dark:text-primary-400'
+                                            : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                                    }`}
+                                    aria-hidden="true"
+                                />
+                            </div>
                             {item.name}
+                            {isActive && (
+                                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500"></div>
+                            )}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center">
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700/50">
+                <div className="flex items-center p-3 rounded-xl bg-gray-50 dark:bg-gray-700/30">
                     <div className="flex-shrink-0">
-                        <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-              <span className="text-primary-800 dark:text-primary-200 font-medium">
-                A
-              </span>
+                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold shadow-md">
+                            A
                         </div>
                     </div>
-                    <div className="ml-3">
-                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Admin User</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+                    <div className="ml-3 flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">Admin User</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Administrator</p>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 
     return (

@@ -1,22 +1,54 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import Button from '../components/common/Button';
 
 const NotFound = () => {
     return (
-        <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
-            <div className="max-w-md w-full text-center">
-                <ExclamationTriangleIcon className="mx-auto h-16 w-16 text-yellow-500" />
-                <h1 className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">Page Not Found</h1>
-                <p className="mt-2 text-gray-600 dark:text-gray-400">
-                    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+            <div className="max-w-lg w-full text-center animate-fade-in">
+                {/* 404 Illustration */}
+                <div className="relative mb-8">
+                    <div className="text-[180px] font-bold text-gray-100 dark:text-gray-800 select-none leading-none">
+                        404
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 opacity-20 blur-3xl"></div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-24 h-24 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    Page Not Found
+                </h1>
+                <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                    Sorry, the page you're looking for doesn't exist or has been moved.
                 </p>
-                <div className="mt-6">
-                    <Link
-                        to="/"
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link to="/">
+                        <Button size="lg" icon={HomeIcon}>
+                            Go to Dashboard
+                        </Button>
+                    </Link>
+                    <button 
+                        onClick={() => window.history.back()} 
+                        className="btn-secondary inline-flex items-center px-6 py-3 text-sm font-medium"
                     >
-                        Go to Dashboard
+                        <ArrowLeftIcon className="w-5 h-5 mr-2" />
+                        Go Back
+                    </button>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="mt-16 flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span>Lost?</span>
+                    <Link to="/" className="text-primary-600 dark:text-primary-400 hover:underline font-medium">
+                        Contact Support
                     </Link>
                 </div>
             </div>
