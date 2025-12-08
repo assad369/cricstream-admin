@@ -4,6 +4,7 @@
   "description": "Admin dashboard for sports streaming and live TV application",
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.1.1",
     "axios": "^1.4.0",
