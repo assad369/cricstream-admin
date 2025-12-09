@@ -104,7 +104,7 @@ exports.deleteAd = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Ad not found'));
         }
 
-        await ad.remove();
+        await Ad.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Ad deleted successfully'));
     } catch (error) {

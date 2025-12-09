@@ -12,7 +12,6 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import AnnouncementForm from '../components/forms/AnnouncementForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import announcementService from '../services/announcementService';
 import { formatDate } from '../utils/helpers';
 
@@ -97,6 +96,7 @@ const Announcements = () => {
         { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchAnnouncements();
     }, [searchTerm]);

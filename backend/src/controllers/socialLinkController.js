@@ -94,7 +94,7 @@ exports.deleteSocialLink = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Social link not found'));
         }
 
-        await socialLink.remove();
+        await SocialLink.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Social link deleted successfully'));
     } catch (error) {

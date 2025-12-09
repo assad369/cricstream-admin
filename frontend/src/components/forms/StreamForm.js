@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { streamSchema } from '../../utils/validation';
 import FormInput from '../common/FormInput';
@@ -13,7 +13,6 @@ const StreamForm = ({ stream, onSubmit, onCancel }) => {
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors, isSubmitting }
     } = useForm({
         resolver: yupResolver(streamSchema),

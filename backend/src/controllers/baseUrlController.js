@@ -94,7 +94,7 @@ exports.deleteBaseUrl = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Base URL not found'));
         }
 
-        await baseUrl.remove();
+        await BaseURL.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Base URL deleted successfully'));
     } catch (error) {

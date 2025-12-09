@@ -111,7 +111,7 @@ exports.deleteLiveTvChannel = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Live TV channel not found'));
         }
 
-        await channel.remove();
+        await LiveTV.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Live TV channel deleted successfully'));
     } catch (error) {

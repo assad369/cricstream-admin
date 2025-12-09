@@ -4,9 +4,7 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import CategoryForm from '../components/forms/CategoryForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import categoryService from '../services/categoryService';
-import { formatDate } from '../utils/helpers';
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
@@ -17,7 +15,6 @@ const Categories = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
         { 
@@ -49,6 +46,7 @@ const Categories = () => {
         { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchCategories();
     }, [currentPage, searchTerm]);
@@ -96,7 +94,6 @@ const Categories = () => {
     };
 
     const handleFormSubmit = async (data) => {
-        setFormSubmitting(true);
         try {
             if (editingCategory) {
                 await categoryService.updateCategory(editingCategory._id, data);
@@ -108,8 +105,6 @@ const Categories = () => {
         } catch (err) {
             setError(`Failed to ${editingCategory ? 'update' : 'create'} category`);
             console.error(err);
-        } finally {
-            setFormSubmitting(false);
         }
     };
 

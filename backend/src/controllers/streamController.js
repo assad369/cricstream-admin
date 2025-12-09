@@ -111,7 +111,7 @@ exports.deleteStream = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Stream not found'));
         }
 
-        await stream.remove();
+        await Stream.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Stream deleted successfully'));
     } catch (error) {

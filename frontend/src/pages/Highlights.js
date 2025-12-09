@@ -12,10 +12,8 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import HighlightForm from '../components/forms/HighlightForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import highlightService from '../services/highlightService';
 import categoryService from '../services/categoryService';
-import { formatDate } from '../utils/helpers';
 
 const Highlights = () => {
     const [highlights, setHighlights] = useState([]);
@@ -28,7 +26,6 @@ const Highlights = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editingHighlight, setEditingHighlight] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
         { 
@@ -82,6 +79,7 @@ const Highlights = () => {
         { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchHighlights();
         fetchCategories();
@@ -140,7 +138,6 @@ const Highlights = () => {
     };
 
     const handleFormSubmit = async (data) => {
-        setFormSubmitting(true);
         try {
             if (editingHighlight) {
                 await highlightService.updateHighlight(editingHighlight._id, data);
@@ -152,8 +149,6 @@ const Highlights = () => {
         } catch (err) {
             setError(`Failed to ${editingHighlight ? 'update' : 'create'} highlight`);
             console.error(err);
-        } finally {
-            setFormSubmitting(false);
         }
     };
 

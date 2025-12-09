@@ -106,7 +106,7 @@ exports.deleteHighlight = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Highlight not found'));
         }
 
-        await highlight.remove();
+        await Highlight.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Highlight deleted successfully'));
     } catch (error) {

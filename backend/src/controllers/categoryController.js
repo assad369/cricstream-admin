@@ -104,7 +104,7 @@ exports.deleteCategory = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Category not found'));
         }
 
-        await category.remove();
+        await Category.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Category deleted successfully'));
     } catch (error) {

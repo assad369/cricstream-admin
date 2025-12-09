@@ -4,7 +4,6 @@ import {
     MagnifyingGlassIcon, 
     FunnelIcon,
     XMarkIcon,
-    SignalIcon,
     ClockIcon
 } from '@heroicons/react/24/outline';
 import { PlayCircleIcon } from '@heroicons/react/24/solid';
@@ -12,10 +11,8 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import StreamForm from '../components/forms/StreamForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import streamService from '../services/streamService';
 import categoryService from '../services/categoryService';
-import { formatDate } from '../utils/helpers';
 
 const Streams = () => {
     const [streams, setStreams] = useState([]);
@@ -29,7 +26,6 @@ const Streams = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editingStream, setEditingStream] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
         {
@@ -113,6 +109,7 @@ const Streams = () => {
         { key: 'expiryTime', label: 'Expires', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchStreams();
         fetchCategories();
@@ -182,7 +179,6 @@ const Streams = () => {
     };
 
     const handleFormSubmit = async (data) => {
-        setFormSubmitting(true);
         try {
             if (editingStream) {
                 await streamService.updateStream(editingStream._id, data);
@@ -194,8 +190,6 @@ const Streams = () => {
         } catch (err) {
             setError(`Failed to ${editingStream ? 'update' : 'create'} stream`);
             console.error(err);
-        } finally {
-            setFormSubmitting(false);
         }
     };
 

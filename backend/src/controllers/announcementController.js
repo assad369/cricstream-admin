@@ -94,7 +94,7 @@ exports.deleteAnnouncement = async (req, res, next) => {
             return res.status(404).json(createApiResponse(false, 'Announcement not found'));
         }
 
-        await announcement.remove();
+        await Announcement.deleteOne({ _id: req.params.id });
 
         res.status(200).json(createApiResponse(true, 'Announcement deleted successfully'));
     } catch (error) {

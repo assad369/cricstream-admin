@@ -10,10 +10,8 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import LiveTvForm from '../components/forms/LiveTvForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import liveTvService from '../services/liveTvService';
 import categoryService from '../services/categoryService';
-import { formatDate } from '../utils/helpers';
 
 const LiveTv = () => {
     const [channels, setChannels] = useState([]);
@@ -27,7 +25,6 @@ const LiveTv = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editingChannel, setEditingChannel] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
         { 
@@ -92,6 +89,7 @@ const LiveTv = () => {
         { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchChannels();
         fetchCategories();
@@ -161,7 +159,6 @@ const LiveTv = () => {
     };
 
     const handleFormSubmit = async (data) => {
-        setFormSubmitting(true);
         try {
             if (editingChannel) {
                 await liveTvService.updateLiveTvChannel(editingChannel._id, data);
@@ -173,8 +170,6 @@ const LiveTv = () => {
         } catch (err) {
             setError(`Failed to ${editingChannel ? 'update' : 'create'} channel`);
             console.error(err);
-        } finally {
-            setFormSubmitting(false);
         }
     };
 

@@ -12,9 +12,7 @@ import DataTable from '../components/common/DataTable';
 import Modal from '../components/common/Modal';
 import BaseUrlForm from '../components/forms/BaseUrlForm';
 import Button from '../components/common/Button';
-import Loading from '../components/common/Loading';
 import baseUrlService from '../services/baseUrlService';
-import { formatDate } from '../utils/helpers';
 
 const BaseUrls = () => {
     const [baseUrls, setBaseUrls] = useState([]);
@@ -26,7 +24,6 @@ const BaseUrls = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editingBaseUrl, setEditingBaseUrl] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
 
     const columns = [
         { 
@@ -73,6 +70,7 @@ const BaseUrls = () => {
         { key: 'createdAt', label: 'Created', type: 'date' }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchBaseUrls();
     }, [currentPage, searchTerm, isActiveFilter]);
@@ -131,7 +129,6 @@ const BaseUrls = () => {
     };
 
     const handleFormSubmit = async (data) => {
-        setFormSubmitting(true);
         try {
             if (editingBaseUrl) {
                 await baseUrlService.updateBaseUrl(editingBaseUrl._id, data);
@@ -143,8 +140,6 @@ const BaseUrls = () => {
         } catch (err) {
             setError(`Failed to ${editingBaseUrl ? 'update' : 'create'} base URL`);
             console.error(err);
-        } finally {
-            setFormSubmitting(false);
         }
     };
 

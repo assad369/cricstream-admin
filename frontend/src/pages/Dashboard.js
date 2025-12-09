@@ -13,7 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import StatCard from '../components/ui/StatCard';
-import Loading, { PageSkeleton } from '../components/common/Loading';
+import { PageSkeleton } from '../components/common/Loading';
 import statsService from '../services/statsService';
 import { formatNumber } from '../utils/helpers';
 
